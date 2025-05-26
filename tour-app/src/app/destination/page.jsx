@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Navbar from '../components/navBar';
 import DestinationsFilter from '../components/destinationFilter';
+import Footer from '../components/footer';
 
 export default function DestinationPage() {
   
@@ -25,7 +26,7 @@ export default function DestinationPage() {
     return () => clearInterval(interval);
   }, [images.length]);
 
-  // Manual navigation
+
   const goToNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
@@ -34,7 +35,6 @@ export default function DestinationPage() {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
 
-  // Go to specific slide
   const goToSlide = (index) => {
     setCurrentIndex(index);
   };
@@ -44,7 +44,7 @@ export default function DestinationPage() {
       <Navbar />
       
       <div className="relative h-screen w-full overflow-hidden">
-        {/* Image Slider */}
+    
         <div className="relative h-full w-full">
           {images.map((image, index) => (
             <div
@@ -63,15 +63,14 @@ export default function DestinationPage() {
             </div>
           ))}
           
-          {/* Overlay with Text */}
+       
           <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white z-10">
           
             <p className="  max-w-3xl text-center px-4 text-[50px] font-serif">
             "Where dreams meet destinations."
             </p>
           </div>
-          
-          {/* Navigation Arrows */}
+    
           <button 
             onClick={goToPrevious}
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full z-20"
@@ -91,8 +90,7 @@ export default function DestinationPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
           </button>
-          
-          {/* Dots Navigation */}
+      
           <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2 z-20">
             {images.map((_, index) => (
               <button
@@ -108,7 +106,7 @@ export default function DestinationPage() {
         </div>
       </div>
       <DestinationsFilter/>
-     
+      <Footer/>
     </div>
   );
 }
