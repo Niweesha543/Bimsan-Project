@@ -23,7 +23,7 @@ export default function AboutPage() {
     return () => clearInterval(interval);
   }, [images.length]);
 
-  // Manual navigation
+
   const goToNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
@@ -32,7 +32,7 @@ export default function AboutPage() {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
 
-  // Go to specific slide
+ 
   const goToSlide = (index) => {
     setCurrentIndex(index);
   };
@@ -42,7 +42,7 @@ export default function AboutPage() {
       <Navbar />
       
       <div className="relative h-screen w-full overflow-hidden">
-        {/* Image Slider */}
+   
         <div className="relative h-full w-full">
           {images.map((image, index) => (
             <div
@@ -61,7 +61,7 @@ export default function AboutPage() {
             </div>
           ))}
           
-          {/* Overlay with Text */}
+    
           <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white z-10">
             <h1 className="text-6xl md:text-8xl font-serif mb-8">About</h1>
             <p className="text-xl md:text-2xl max-w-3xl text-center px-4">
@@ -69,7 +69,7 @@ export default function AboutPage() {
             </p>
           </div>
           
-          {/* Navigation Arrows */}
+      
           <button 
             onClick={goToPrevious}
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full z-20"
@@ -90,7 +90,7 @@ export default function AboutPage() {
             </svg>
           </button>
           
-          {/* Dots Navigation */}
+        
           <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2 z-20">
             {images.map((_, index) => (
               <button
@@ -106,7 +106,7 @@ export default function AboutPage() {
         </div>
       </div>
       
-      {/* About Content Section - Add your about content below the slider */}
+      
       <section className="py-16 px-4 max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold mb-8 text-center">Our Story</h2>
         <div className="grid md:grid-cols-2 gap-12">

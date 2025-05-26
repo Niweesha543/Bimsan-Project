@@ -66,9 +66,9 @@ const TestimonialCard = ({ content, name, company, image }) => {
 
 const TestimonialCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [visibleTestimonials, setVisibleTestimonials] = useState(2); // Default showing 2
+  const [visibleTestimonials, setVisibleTestimonials] = useState(2);
 
-  // Update number of visible testimonials based on screen size
+ 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -78,26 +78,26 @@ const TestimonialCarousel = () => {
       }
     };
 
-    // Set on initial load
+
     handleResize();
 
-    // Update on resize
+  
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Auto-rotate testimonials
+
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => 
         (prevIndex + 1) % (testimonials.length - visibleTestimonials + 1)
       );
-    }, 3000); // Change every 5 seconds
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [visibleTestimonials]);
 
-  // Handle manual navigation
+ 
   const goToSlide = (index) => {
     setActiveIndex(index);
   };
@@ -109,7 +109,7 @@ const TestimonialCarousel = () => {
         backgroundImage: "url('/image_10.jpg')" 
       }}
     >
-      {/* Dark overlay for better text readability */}
+ 
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4">
@@ -139,7 +139,7 @@ const TestimonialCarousel = () => {
             ))}
           </div>
 
-          {/* Navigation dots */}
+    
           <div className="flex justify-center mt-8">
             {Array.from({ length: testimonials.length - visibleTestimonials + 1 }).map((_, index) => (
               <button

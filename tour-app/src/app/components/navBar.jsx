@@ -44,7 +44,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
-          {/* Logo */}
+ 
           <Link href="/" className="font-bold text-xl">
           <img 
           src="/image_logo.png" 
@@ -53,7 +53,6 @@ const Navbar = () => {
         />
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden lg:flex space-x-6 font-sans tracking-widest uppercase">
             {navLinks.map((link) => (
               <Link
@@ -68,7 +67,6 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
           <button 
             className="lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -83,7 +81,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="lg:hidden">
           <div className={`px-4 py-5 shadow-lg ${isScrolled ? 'bg-white text-gray-800' : 'bg-gray-900 text-white'}`}>

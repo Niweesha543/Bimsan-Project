@@ -6,6 +6,7 @@ import MemberBenefits from "./components/memberBenefitCards";
 import TestimonialCarousel from "./components/testimonial ";
 import TravelInspirationSection from "./components/dayTours";
 import Navbar from "./components/navBar";
+import Footer from "./components/footer";
 
 export default function Home() {
   return (
@@ -34,6 +35,8 @@ export default function Home() {
    <TravelInspirationSection/>
 
     </div>
+
+    <Footer/>
   </div>
   );
 }
