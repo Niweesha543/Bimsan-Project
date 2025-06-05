@@ -657,7 +657,7 @@ export default function DestinationsPage() {
   const countries = ["all", "sri lanka", "bali", "maldives", "thailand", "dubai", "malaysia"];
   const categories = ["All", "Beach", "Safari", "Culture & History", "Landscapes"];
 
-  
+
   const filteredDestinations = destinations.filter(dest => {
     const countryMatch = selectedCountry === "all" || dest.country === selectedCountry;
     const categoryMatch = selectedCategory === "All" || dest.category === selectedCategory;
