@@ -59,15 +59,15 @@ export default function DestinationCard() {
        
           <div
             className="md:w-1/2 cursor-pointer"
-            onClick={() => router.push(section.link)}
-          >
+            onClick={() => router.push(section.link)}>
+
             <Image
               src={section.image}
               alt={section.title}
               width={500}
               height={350}
-              className="rounded-lg shadow-lg shadow-black object-cover w-full h-[300px]"
-            />
+              className="rounded-lg shadow-lg shadow-black object-cover w-full h-[300px]"/>
+
           </div>
         </div>
       ))}
@@ -84,3 +84,9 @@ export default function DestinationCard() {
     </main>
   );
 }
+
+
+
+
+
+
