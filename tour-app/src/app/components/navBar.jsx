@@ -1,15 +1,26 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Menu, X, ChevronDown, User, Globe, Mail, MapPin, Target, Hotel, Calendar } from 'lucide-react';
+"use client";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  User,
+  Globe,
+  Mail,
+  MapPin,
+  Target,
+  Hotel,
+  Calendar,
+} from "lucide-react";
 
 const navLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'Destinations', href: '/destination' },
-  { name: 'Packages', href: '/packages' },
-  { name: 'Excursions', href: '/excursions' },
-  { name: 'Things To Do', href: '/thingsToDo' },
-  { name: 'Tailor Made', href: '/tailorMade' },
+  { name: "Home", href: "/" },
+  { name: "Destinations", href: "/destination" },
+  { name: "Packages", href: "/packages" },
+  { name: "Excursions", href: "/excursions" },
+  { name: "Things To Do", href: "/thingsToDo" },
+  { name: "Tailor Made", href: "/tailorMade" },
 ];
 
 const Navbar = () => {
@@ -17,6 +28,13 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+
+  // ADDED: Missing form state variables
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,9 +45,9 @@ const Navbar = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -45,6 +63,57 @@ const Navbar = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setIsLogin(false);
+    // ADDED: Reset form fields when closing modal
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+  };
+
+  const handleSubmit = async (e) => {
+    console.log(e);
+    e.preventDefault();
+    console.log(email, password, firstName, lastName, confirmPassword);
+    if (
+      !email ||
+      !password ||
+      (!isLogin && (!firstName || !lastName || !confirmPassword))
+    ) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    if (!isLogin && password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    const payload = isLogin
+      ? { email, password }
+      : { firstName, lastName, email, password };
+
+    try {
+      const response = await fetch(isLogin ? "/api/v1/login" : "/api/v1/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`Success: ${data.message || "Logged in / Registered!"}`);
+        closeModal();
+      } else {
+        alert(`Error: ${data.message || "Something went wrong"}`);
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert("Network error. Please try again.");
+    }
   };
 
   return (
@@ -52,8 +121,8 @@ const Navbar = () => {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white text-gray-800 shadow-md py-3'
-            : 'bg-transparent text-white py-5'
+            ? "bg-white text-gray-800 shadow-md py-3"
+            : "bg-transparent text-white py-5"
         }`}
       >
         <div className="container mx-auto px-4">
@@ -72,7 +141,7 @@ const Navbar = () => {
                   key={link.name}
                   href={link.href}
                   className={`font-medium hover:text-orange-500 transition-colors ${
-                    isScrolled ? 'text-gray-700' : 'text-white'
+                    isScrolled ? "text-gray-700" : "text-white"
                   }`}
                 >
                   {link.name}
@@ -92,9 +161,15 @@ const Navbar = () => {
               aria-label="Toggle menu"
             >
               {isMenuOpen ? (
-                <X className={isScrolled ? 'text-gray-800' : 'text-white'} size={24} />
+                <X
+                  className={isScrolled ? "text-gray-800" : "text-white"}
+                  size={24}
+                />
               ) : (
-                <Menu className={isScrolled ? 'text-gray-800' : 'text-white'} size={24} />
+                <Menu
+                  className={isScrolled ? "text-gray-800" : "text-white"}
+                  size={24}
+                />
               )}
             </button>
           </div>
@@ -102,7 +177,11 @@ const Navbar = () => {
 
         {isMenuOpen && (
           <div className="lg:hidden">
-            <div className={`px-4 py-5 shadow-lg ${isScrolled ? 'bg-white text-gray-800' : 'bg-gray-900 text-white'}`}>
+            <div
+              className={`px-4 py-5 shadow-lg ${
+                isScrolled ? "bg-white text-gray-800" : "bg-gray-900 text-white"
+              }`}
+            >
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -136,10 +215,10 @@ const Navbar = () => {
               >
                 <X size={24} />
               </button>
-              
+
               <div className="text-center text-4xl font-serif ">
-                <h1 className="text-4xl font-bold text-slate-700 mb-2">
-                  {isLogin ? 'Welcome back' : 'CONNECT WITH'}
+                <h1 className="text-4xl font-bold text-slate-700 mb-2 ">
+                  {isLogin ? "Welcome back" : "CONNECT WITH"}
                 </h1>
                 {!isLogin && (
                   <h2 className="text-4xl font-bold text-slate-700 mb-4">
@@ -157,9 +236,11 @@ const Navbar = () => {
               {!isLogin && (
                 <div className="w-full lg:w-1/2 bg-gradient-to-br from-slate-700 to-slate-950 p-8 text-white relative overflow-hidden ml-6 rounded-3xl mb-6 mt-8">
                   <div className="relative z-10">
-                    <h3 className="text-2xl font-bold mb-8 text-center mt-16  font-serif ">Member benefits</h3>
+                    <h3 className="text-2xl font-bold mb-8 text-center mt-16  font-serif ">
+                      Member benefits
+                    </h3>
                     <div className="w-16 h-1 bg-orange-500 mx-auto mb-16"></div>
-                    
+
                     <div className="grid grid-cols-3 gap-4 mb-6 mt-8">
                       <div className="bg-gray-100 text-slate-800 rounded-2xl p-6 text-center">
                         <div className="flex justify-center mb-3">
@@ -183,7 +264,7 @@ const Navbar = () => {
                         <div className="text-xs">800 EVENTS</div>
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-3 gap-4 mt-16">
                       <div className="bg-gray-100 text-slate-800 rounded-2xl p-6 text-center">
                         <div className="flex justify-center mb-3">
@@ -208,15 +289,33 @@ const Navbar = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Background decoration with pin/location icons */}
                   <div className="absolute inset-0 opacity-20">
-                    <MapPin className="absolute top-16 left-12 text-white" size={32} />
-                    <MapPin className="absolute top-32 right-16 text-white" size={24} />
-                    <MapPin className="absolute bottom-32 left-16 text-white" size={20} />
-                    <MapPin className="absolute bottom-16 right-12 text-white" size={28} />
-                    <MapPin className="absolute top-48 left-32 text-white" size={20} />
-                    <MapPin className="absolute bottom-48 right-32 text-white" size={32} />
+                    <MapPin
+                      className="absolute top-16 left-12 text-white"
+                      size={32}
+                    />
+                    <MapPin
+                      className="absolute top-32 right-16 text-white"
+                      size={24}
+                    />
+                    <MapPin
+                      className="absolute bottom-32 left-16 text-white"
+                      size={20}
+                    />
+                    <MapPin
+                      className="absolute bottom-16 right-12 text-white"
+                      size={28}
+                    />
+                    <MapPin
+                      className="absolute top-48 left-32 text-white"
+                      size={20}
+                    />
+                    <MapPin
+                      className="absolute bottom-48 right-32 text-white"
+                      size={32}
+                    />
                   </div>
 
                   {/* Silhouette buildings at bottom */}
@@ -225,19 +324,28 @@ const Navbar = () => {
               )}
 
               {/* Right side - Form */}
-              <div className={`w-full ${isLogin ? 'lg:w-full' : 'lg:w-1/2'} p-8 ${isLogin ? 'flex justify-center' : ''}`}>
-                <div className={`${isLogin ? 'max-w-md w-full' : 'w-full'}`}>
-                  <form className="space-y-6">
+              <div
+                className={`w-full ${isLogin ? "lg:w-full" : "lg:w-1/2"} p-8 ${
+                  isLogin ? "flex justify-center" : ""
+                }`}
+              >
+                <div className={`${isLogin ? "max-w-md w-full" : "w-full"}`}>
+                  {/* FIXED: Added proper onSubmit handler to form */}
+                  <form className="space-y-6" onSubmit={handleSubmit}>
                     {!isLogin && (
                       <div className="grid grid-cols-2 gap-4">
                         <input
                           type="text"
                           placeholder="First Name"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
                           className="w-full px-4 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-50"
                         />
                         <input
                           type="text"
                           placeholder="Last Name"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
                           className="w-full px-4 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-50"
                         />
                       </div>
@@ -246,12 +354,16 @@ const Navbar = () => {
                     <input
                       type="email"
                       placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-4 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-50"
                     />
 
                     <input
                       type="password"
                       placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="w-full px-4 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-50"
                     />
 
@@ -260,29 +372,51 @@ const Navbar = () => {
                         <input
                           type="password"
                           placeholder="Password confirmation"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
                           className="w-full px-4 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-50"
                         />
 
-                       
-
                         <div className="flex items-start space-x-3">
-                          <input type="checkbox" id="terms" className="mt-1 rounded" />
-                          <label htmlFor="terms" className="text-sm text-gray-600">
-                            I agree to the <span className="text-orange-500 font-medium">BIMSAN</span> Terms of Service
+                          <input
+                            type="checkbox"
+                            id="terms"
+                            className="mt-1 rounded"
+                          />
+                          <label
+                            htmlFor="terms"
+                            className="text-sm text-gray-600"
+                          >
+                            I agree to the{" "}
+                            <span className="text-orange-500 font-medium">
+                              BIMSAN
+                            </span>{" "}
+                            Terms of Service
                           </label>
                         </div>
 
                         <div className="bg-gray-100 p-4 rounded-lg">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
-                              <input type="checkbox" id="recaptcha" className="rounded" />
-                              <label htmlFor="recaptcha" className="text-sm text-gray-600">
+                              <input
+                                type="checkbox"
+                                id="recaptcha"
+                                className="rounded"
+                              />
+                              <label
+                                htmlFor="recaptcha"
+                                className="text-sm text-gray-600"
+                              >
                                 I'm not a robot
                               </label>
                             </div>
                             <div className="flex flex-col items-center">
-                              <div className="text-xs text-blue-600 font-bold mb-1">reCAPTCHA</div>
-                              <div className="text-xs text-gray-500">Privacy - Terms</div>
+                              <div className="text-xs text-blue-600 font-bold mb-1">
+                                reCAPTCHA
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                Privacy - Terms
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -294,28 +428,33 @@ const Navbar = () => {
                       className="w-full bg-slate-800 hover:bg-slate-900 text-white py-4 px-6 rounded-full font-bold text-lg transition-colors flex items-center justify-center shadow-lg font-sans tracking-widest uppercase"
                     >
                       <span className="text-white ">
-                        {isLogin ? 'LOGIN' : 'CREATE FREE ACCOUNT'}
+                        {isLogin ? "LOGIN" : "CREATE FREE ACCOUNT"}
                       </span>
                       {!isLogin && <span className="ml-2 text-white">→</span>}
                     </button>
 
                     <div className="text-center pt-4">
                       <span className="text-gray-600">
-                        {isLogin ? "Don't have an account? " : "Have an account? "}
+                        {isLogin
+                          ? "Don't have an account? "
+                          : "Have an account? "}
                       </span>
                       <button
                         type="button"
                         onClick={() => setIsLogin(!isLogin)}
                         className="text-orange-500 hover:text-orange-600 font-medium underline"
                       >
-                        {isLogin ? 'Sign up.' : 'Log in.'}
+                        {isLogin ? "Sign up." : "Log in."}
                       </button>
                     </div>
 
                     {!isLogin && (
                       <p className="text-xs text-gray-500 text-center pt-4">
-                        If you need any help creating your account please email{' '}
-                        <span className="text-orange-500">support@bimsan.com</span>.
+                        If you need any help creating your account please email{" "}
+                        <span className="text-orange-500">
+                          support@bimsan.com
+                        </span>
+                        .
                       </p>
                     )}
                   </form>
