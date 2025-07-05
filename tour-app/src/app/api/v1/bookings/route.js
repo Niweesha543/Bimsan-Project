@@ -12,7 +12,7 @@ export async function POST(request) {
     // Test database connection first
     console.log('Testing database connection...');
     await prisma.$connect();
-    console.log('✅ Database connected');
+    console.log('✅ Database connecteddddddddddd');
     
     const body = await request.json();
     console.log('📝 Request body:', body);
