@@ -45,11 +45,10 @@ export async function POST(req) {
     // ADDED: Create new user in database
     const newUser = await prisma.user.create({
       data: {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        email: email.toLowerCase().trim(),
-        password: hashedPassword,
-        createdAt: new Date(),
+        firstName: String(firstName.trim()),
+        lastName:  String(lastName.trim()),
+        email: String (email.toLowerCase().trim()),
+        password: String( hashedPassword),
       },
     });
 
@@ -69,7 +68,7 @@ export async function POST(req) {
       return NextResponse.json({ message: 'User already exists with this email' }, { status: 409 });
     }
     console.log(error.message)
-    return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Server error', error: error.message}, { status: 500 });
   } finally {
     // ADDED: Close Prisma connection
     await prisma.$disconnect();

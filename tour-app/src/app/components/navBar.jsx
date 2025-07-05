@@ -92,18 +92,25 @@ const Navbar = () => {
     const payload = isLogin
       ? { email, password }
       : { firstName, lastName, email, password };
+    console.log("payload", payload);
 
     try {
-      const response = await fetch(isLogin ? "/api/v1/login" : "/api/v1/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      console.log("helloo")
+      const response = await fetch(
+        isLogin ? "/api/v1/login" : "/api/v1/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
+      console.log("response",response)
       const data = await response.json();
-
+     
       if (response.ok) {
         alert(`Success: ${data.message || "Logged in / Registered!"}`);
         closeModal();

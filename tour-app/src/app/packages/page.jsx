@@ -4,6 +4,7 @@ import Navbar from '../components/navBar';
 
 const packages = [
   {
+    id: 'pkg_1',
     title: 'Sri Lanka at a glance',
     description:
       'Explore the wonders of Sri Lanka with our Package 11 – Sri Lanka at a Glance! Prepare for an unforgettable adventure filled with ancient historical sites, breathtaking landscapes, cultural experienc....',
@@ -22,6 +23,7 @@ const packages = [
     ]
   },
   {
+    id: 'pkg_2',
     title: 'Short break tour in Sri Lanka',
     description:
       "Our Short Break Tour allows you to experience the essence of Sri Lanka. You'll experience the country's attractions and dig into its fascinating legacy in only a few days. Prepare for an action-packed....",
@@ -39,6 +41,7 @@ const packages = [
     ]
   },
   {
+    id: 'pkg_3',
     title: 'Yoga and Meditation Tour in Sri Lanka',
     description:
       "Welcome to Bimsan Tours' transformative Yoga and Meditation Tour in Sri Lanka! Embark on a soul-nourishing journey that combines the serene art of yoga with the profound practice of meditation, all am....",
@@ -56,7 +59,8 @@ const packages = [
       { day: '07', title: 'Mirissa / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_4',
     title: 'Ramayana Trail',
     description:
       "Dive into Sri Lanka's rich history and explore UNESCO World Heritage Sites. Visit ancient cities, temples, and royal gardens that tell stories of centuries past.",
@@ -74,7 +78,8 @@ const packages = [
       { day: '07', title: 'Nuwara Eliya / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_5',
     title: 'Adventure Tour',
     description:
       "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
@@ -92,7 +97,8 @@ const packages = [
       { day: '07', title: 'Haputale / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_6',
     title: 'Package 13',
     description:
       "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
@@ -110,7 +116,8 @@ const packages = [
       { day: '07', title: 'Bandarawela / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_7',
     title: 'Paradise Golf Tour',
     description:
       "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
@@ -130,7 +137,8 @@ const packages = [
       { day: '10', title: 'Departure' }
     ]
   },
-  {
+  { 
+    id: 'pkg_8',
     title: 'Honeymoon Tour',
     description:
       "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
@@ -150,7 +158,8 @@ const packages = [
       { day: '11', title: 'Unawatuna / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_9',
     title: 'Package 14',
     description:
       "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
@@ -170,7 +179,8 @@ const packages = [
       { day: '11', title: 'Negombo / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_10',
     title: 'Family Tour in Sri Lanka',
     description:
       "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
@@ -191,7 +201,8 @@ const packages = [
       { day: '13 & 14', title: 'Galle / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_11',
     title: 'Unexplored North / East Tour of Sri Lanka',
     description:
       "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
@@ -213,7 +224,8 @@ const packages = [
       { day: '15', title: 'Ampara / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_12',
     title: 'Off the Beaten Track Tour in Sri Lanka',
     description:
       "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
@@ -235,7 +247,8 @@ const packages = [
       { day: '15', title: 'Deniyaya / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_13',
     title: 'Enchanting Sri Lanka',
     description:
       "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
@@ -257,7 +270,8 @@ const packages = [
       { day: '15', title: 'Galle / Colombo (Departure)' }
     ]
   },
-  {
+  { 
+    id: 'pkg_14',
     title: 'Wildlife & Beach Tour',
     description: "Experience Sri Lanka's misty mountains and tea plantations with trekking, waterfalls, and scenic train rides through breathtaking hill country.",
     image: '/image_19.jpg',
@@ -304,7 +318,6 @@ const StarRating = ({ rating }) => {
   return <div className="flex">{stars}</div>;
 };
 
-
 const PackageDetailPopup = ({ packageData, onClose }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -317,10 +330,13 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
     message: ''
   });
   
+  // FIXED: Enhanced state management for form submission with better error handling
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+  const [submitMessage, setSubmitMessage] = useState('');
   
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   
- 
   const slideImages = [
     packageData.image,
     `/image_${parseInt(packageData.image.match(/\d+/)[0]) + 20}.jpg`,
@@ -343,28 +359,169 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
       ...prev,
       [name]: value
     }));
+    
+    // FIXED: Clear submit status when user starts typing to allow retry
+    if (submitStatus) {
+      setSubmitStatus(null);
+      setSubmitMessage('');
+    }
   };
 
-  const handleSubmit = (e) => {
+  // ENHANCED: Better error handling and debugging
+  const handleSubmit = async (e) => {
+    console.log(e);
     e.preventDefault();
-  
-    console.log('Form submitted:', formData);
-   
-    onClose();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+    setSubmitMessage('');
+
+    try {
+      // Client-side validation
+      if (!formData.name.trim()) {
+        throw new Error('Name is required');
+      }
+      
+      if (!formData.email.trim()) {
+        throw new Error('Email is required');
+      }
+      
+      if (!formData.mobile.trim()) {
+        throw new Error('Mobile number is required');
+      }
+      
+      if (new Date(formData.startDate) <= new Date()) {
+        throw new Error('Start date must be in the future');
+      }
+      
+      if (new Date(formData.endDate) <= new Date(formData.startDate)) {
+        throw new Error('End date must be after start date');
+      }
+
+      const bookingData = {
+        packageId: packageData.id,
+        packageTitle: packageData.title,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        mobile: formData.mobile.trim(),
+        adults: parseInt(formData.adults),
+        children: parseInt(formData.children),
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        message: formData.message.trim()
+      };
+
+      console.log('📤 Sending booking data:', bookingData);
+      console.log('📍 API URL:', `${window.location.origin}/api/v1/bookings`);
+
+      // ENHANCED: Better API call with detailed error handling
+      const response = await fetch('/api/v1/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(bookingData)
+      });
+
+      console.log('📥 Response status:', response.status);
+      console.log('📥 Response headers:', response.headers);
+
+      // ENHANCED: Better response handling
+      let result;
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        result = await response.json();
+        console.log('📥 Response data:', result);
+      } else {
+        const textResponse = await response.text();
+        console.log('📥 Response text:', textResponse);
+        throw new Error(`Server returned non-JSON response: ${textResponse.substring(0, 100)}...`);
+      }
+
+      if (!response.ok) {
+        // ENHANCED: Detailed error messages based on status code
+        let errorMessage = result.error || 'Unknown server error';
+        
+        switch (response.status) {
+          case 404:
+            errorMessage = 'API endpoint not found. Please check if /api/bookings exists.';
+            break;
+          case 500:
+            errorMessage = `Database error: ${result.error || 'Internal server error'}`;
+            break;
+          case 400:
+            errorMessage = `Validation error: ${result.error || 'Bad request'}`;
+            break;
+          default:
+            errorMessage = `Server error (${response.status}): ${result.error || 'Unknown error'}`;
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      // Success handling
+      setSubmitStatus('success');
+      setSubmitMessage(`Booking saved successfully! Booking ID: ${result.data?.id || 'N/A'}. We will contact you within 24 hours.`);
+      
+      console.log('✅ Booking saved successfully:', result.data);
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        mobile: '',
+        adults: 1,
+        children: 0,
+        startDate: '',
+        endDate: '',
+        message: ''
+      });
+
+      // Auto-close popup
+      setTimeout(() => {
+        onClose();
+      }, 4000);
+
+    } catch (error) {
+      console.error('❌ Complete error object:', error);
+      console.error('❌ Error message:', error.message);
+      console.error('❌ Error stack:', error.stack);
+      
+      setSubmitStatus('error');
+      
+      // ENHANCED: More specific error messages
+      let errorMessage = 'Failed to submit booking. ';
+      
+      if (error.message.includes('fetch')) {
+        errorMessage += 'Network connection error. Please check your internet connection.';
+      } else if (error.message.includes('API endpoint not found')) {
+        errorMessage += 'The booking API is not set up. Please contact support.';
+      } else if (error.message.includes('Database error')) {
+        errorMessage += 'Database connection issue. Please try again later.';
+      } else if (error.message.includes('Validation error')) {
+        errorMessage += error.message.replace('Validation error: ', '');
+      } else if (error.message) {
+        errorMessage += error.message;
+      } else {
+        errorMessage += 'Please try again later.';
+      }
+      
+      setSubmitMessage(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-lg max-w-6xl w-full max-h-screen overflow-y-auto relative">
-    
         <div className="bg-blue-950 text-white p-4">
           <h2 className="text-2xl font-bold">{packageData.title}</h2>
         </div>
 
         <div className="flex flex-col md:flex-row">
-   
           <div className="md:w-2/3 p-6">
- 
             <div className="mb-6">
               <p className="text-gray-700 mb-4">{packageData.fullDescription}</p>
               <div className="text-orange-500 inline-block p-1 px-2 rounded mb-4 border-b border-orange-500">
@@ -372,14 +529,12 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
               </div>
             </div>
 
-   
             <div className="relative w-full h-64 mb-6 group">
               <img
                 src={slideImages[currentSlideIndex]}
                 alt={packageData.title}
                 className="w-full h-full object-cover rounded transition-opacity duration-500"
               />
-      
               <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
                 {slideImages.map((_, index) => (
                   <button 
@@ -395,7 +550,6 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
                 ))}
               </div>
             </div>
-
 
             <div className="mb-6">
               <h3 className="text-xl font-bold mb-4 text-blue-950">Itinerary</h3>
@@ -427,19 +581,43 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
             </div>
           </div>
 
-
           <div className="md:w-1/3 bg-gray-100 p-6">
             <h3 className="text-xl font-bold mb-4 text-center text-blue-950">Book Now!</h3>
+            
+            {/* FIXED: Enhanced status message display with better styling */}
+            {submitStatus && (
+              <div className={`mb-4 p-3 rounded-lg border ${
+                submitStatus === 'success' 
+                  ? 'bg-green-50 border-green-200 text-green-800' 
+                  : 'bg-red-50 border-red-200 text-red-800'
+              }`}>
+                <div className="flex items-center">
+                  {submitStatus === 'success' ? (
+                    <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  )}
+                  <span className="text-sm font-medium">{submitMessage}</span>
+                </div>
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit}>
+        
               <div className="space-y-4">
                 <div>
                   <input 
                     type="text" 
                     name="name" 
                     placeholder="Name" 
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={formData.name}
                     onChange={handleChange}
+                    disabled={isSubmitting} // FIXED: Disable during submission
                     required
                   />
                 </div>
@@ -448,9 +626,10 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
                     type="email" 
                     name="email" 
                     placeholder="Email" 
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={formData.email}
                     onChange={handleChange}
+                    disabled={isSubmitting} // FIXED: Disable during submission
                     required
                   />
                 </div>
@@ -459,9 +638,10 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
                     type="tel" 
                     name="mobile" 
                     placeholder="Mobile" 
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={formData.mobile}
                     onChange={handleChange}
+                    disabled={isSubmitting} // FIXED: Disable during submission
                     required
                   />
                 </div>
@@ -470,9 +650,10 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
                     type="number" 
                     name="adults" 
                     placeholder="No. of Adults" 
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={formData.adults}
                     onChange={handleChange}
+                    disabled={isSubmitting} // FIXED: Disable during submission
                     min="1"
                     required
                   />
@@ -482,9 +663,10 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
                     type="number" 
                     name="children" 
                     placeholder="No. of Children (2-12 years)" 
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={formData.children}
                     onChange={handleChange}
+                    disabled={isSubmitting} // FIXED: Disable during submission
                     min="0"
                   />
                 </div>
@@ -493,9 +675,11 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
                   <input 
                     type="date" 
                     name="startDate" 
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={formData.startDate}
                     onChange={handleChange}
+                    disabled={isSubmitting} // FIXED: Disable during submission
+                    min={new Date().toISOString().split('T')[0]} // FIXED: Prevent past dates
                     required
                   />
                 </div>
@@ -504,9 +688,11 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
                   <input 
                     type="date" 
                     name="endDate" 
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={formData.endDate}
                     onChange={handleChange}
+                    disabled={isSubmitting} // FIXED: Disable during submission
+                    min={formData.startDate || new Date().toISOString().split('T')[0]} // FIXED: Ensure end date is after start date
                     required
                   />
                 </div>
@@ -515,27 +701,53 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
                     name="message" 
                     placeholder="Your Message" 
                     rows="4"
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={formData.message}
                     onChange={handleChange}
+                    disabled={isSubmitting} // FIXED: Disable during submission
                   ></textarea>
                 </div>
                 <div>
+                  {/* FIXED: Enhanced button with loading spinner and better state management */}
                   <button 
                     type="submit" 
-                    className="w-full bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600"
+                    disabled={isSubmitting} // FIXED: Disable during submission
+                    className={`w-full py-2 px-4 rounded font-medium transition-all duration-200 flex items-center justify-center ${
+                      isSubmitting 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-orange-500 hover:bg-orange-600 active:bg-orange-700'
+                    } text-white`}
                   >
-                    Send
+                    {isSubmitting ? (
+                      <>
+                        {/* ADDED: Loading spinner */}
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Submitting...
+                      </>
+                    ) : (
+                      'Send Booking Request'
+                    )} {/* FIXED: More descriptive button text */}
                   </button>
                 </div>
               </div>
             </form>
+            
+            {/* ADDED: Additional information for users */}
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-xs text-blue-700">
+                <strong>Note:</strong> This is a booking request. Our team will contact you within 24 hours to confirm availability and pricing.
+              </p>
+            </div>
           </div>
         </div>
 
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-white text-xl font-bold hover:text-gray-300"
+          disabled={isSubmitting} // FIXED: Disable close during submission
+          className="absolute top-4 right-4 text-white text-xl font-bold hover:text-gray-300 disabled:opacity-50 transition-opacity"
         >
           ×
         </button>
@@ -545,16 +757,18 @@ const PackageDetailPopup = ({ packageData, onClose }) => {
 };
 
 export default function PackagesPage() {
+  // FIXED: Enhanced state management with better initialization
   const [currentIndex, setCurrentIndex] = useState(0);
   const [favorites, setFavorites] = useState({});
   const [selectedPackage, setSelectedPackage] = useState(null);
 
+  // FIXED: Carousel auto-play with cleanup
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % sliderImages.length);
     }, 5000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // FIXED: Cleanup interval on unmount
   }, []);
 
   const goToPrevious = () => {
@@ -567,52 +781,57 @@ export default function PackagesPage() {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % sliderImages.length);
   };
 
-  const toggleFavorite = (e, index) => {
+  // FIXED: Enhanced favorite toggle with better state management
+  const toggleFavorite = (e, packageId) => {
     e.stopPropagation(); 
     setFavorites(prev => ({
       ...prev,
-      [index]: !prev[index]
+      [packageId]: !prev[packageId] // CHANGED: Use package ID instead of index
     }));
   };
 
+  // FIXED: Enhanced package detail opening with body scroll management
   const openPackageDetail = (pkg) => {
     setSelectedPackage(pkg);
-    document.body.style.overflow = 'hidden'; 
+    document.body.style.overflow = 'hidden'; // FIXED: Prevent background scrolling
   };
 
+  // FIXED: Enhanced package detail closing with proper cleanup
   const closePackageDetail = () => {
     setSelectedPackage(null);
-    document.body.style.overflow = 'auto'; 
+    document.body.style.overflow = 'auto'; // FIXED: Restore scrolling
   };
+
+  // FIXED: Cleanup on component unmount
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'auto'; // FIXED: Ensure scroll is restored on unmount
+    };
+  }, []);
 
   return (
     <section className="bg-gray-50 min-h-screen">
       <Navbar />
 
-     
       <div className="relative w-full h-[700px] overflow-hidden mb-12">
         <img
           src={sliderImages[currentIndex]}
           alt={`Slide ${currentIndex + 1}`}
           className="w-full h-full object-cover transition-all duration-700"
         />
-
-      
       </div>
 
       <h2 className="text-3xl font-bold text-center mb-12 text-blue-950">
         Explore Our Travel Packages
       </h2>
 
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-16 pb-12">
         {packages.map((pkg, index) => (
           <div
-            key={index}
+            key={pkg.id} // FIXED: Use package ID for stable keys
             className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-300 flex flex-col md:flex-row h-72 cursor-pointer"
             onClick={() => openPackageDetail(pkg)}
           >
-      
             <div className="relative md:w-1/3 h-full">
               <img
                 src={pkg.image}
@@ -621,15 +840,15 @@ export default function PackagesPage() {
               />
               <button 
                 className="absolute top-4 left-4 bg-white bg-opacity-30 rounded-full p-2 hover:bg-opacity-50 transition-colors"
-                onClick={(e) => toggleFavorite(e, index)}
+                onClick={(e) => toggleFavorite(e, pkg.id)} // CHANGED: Pass package ID
               >
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
                   width="24" 
                   height="24" 
                   viewBox="0 0 24 24" 
-                  fill={favorites[index] ? "orange" : "none"} 
-                  stroke={favorites[index] ? "orange" : "white"} 
+                  fill={favorites[pkg.id] ? "orange" : "none"} // CHANGED: Use package ID
+                  stroke={favorites[pkg.id] ? "orange" : "white"} // CHANGED: Use package ID
                   strokeWidth="2" 
                   strokeLinecap="round" 
                   strokeLinejoin="round" 
@@ -640,15 +859,12 @@ export default function PackagesPage() {
               </button>
             </div>
             
-      
             <div className="p-6 md:w-2/3 flex flex-col justify-between h-full overflow-hidden">
               <div>
-           
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
                   <h3 className="text-xl font-bold text-blue-950 mb-2 md:mb-0 truncate">{pkg.title}</h3>
                   <div className="flex flex-col items-end">
                     <div className="flex items-center">
-                   
                       <StarRating rating={pkg.rating} />
                     </div>
                     <div className="text-sm mt-1">
@@ -658,7 +874,6 @@ export default function PackagesPage() {
                   </div>
                 </div>
                 
-    
                 <div className="flex items-center text-blue-800 mb-3">
                   <span className="font-medium">{pkg.location}</span>
                   <span className="mx-2 text-gray-400">|</span>
@@ -666,19 +881,16 @@ export default function PackagesPage() {
                   <span className="ml-2 text-gray-600">300 m from centre</span>
                 </div>
                 
-              
                 <p className="text-gray-700 mb-4 line-clamp-2 text-sm">{pkg.description}</p>
                 
- 
                 <div className="bg-orange-500 inline-block p-1 px-2 rounded">
                   <span className="font-medium text-white">{pkg.days} Days | {pkg.nights} Nights</span>
                 </div>
               </div>
               
-   
               <div className="flex justify-end mt-4">
                 <button 
-                  className="bg-blue-950 hover:bg-blue-900 text-white font-bold py-2 px-6 rounded-md"
+                  className="bg-blue-950 hover:bg-blue-900 text-white font-bold py-2 px-6 rounded-md transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     openPackageDetail(pkg);
@@ -692,6 +904,7 @@ export default function PackagesPage() {
         ))}
       </div>
 
+      {/* FIXED: Enhanced popup with better state management */}
       {selectedPackage && (
         <PackageDetailPopup 
           packageData={selectedPackage} 
