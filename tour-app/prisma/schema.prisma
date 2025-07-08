@@ -56,6 +56,18 @@ model Booking {
   @@map("bookings")
 }
 
+model Testimonial {
+  id         String   @id @default(cuid())
+  name       String   @db.VarChar(100)
+  email      String   @db.VarChar(255)
+  content    String   @db.VarChar(1000)
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
 enum BookingStatus {
   PENDING
   CONFIRMED
