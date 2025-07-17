@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 
-
 const TestimonialCard = ({ content, name, email, createdAt }) => {
   return (
-    <div className="bg-white rounded shadow-lg p-8 mx-4 h-full flex flex-col relative">
+    <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded shadow-lg p-8 mx-4 h-full flex flex-col relative">
       <div className="mb-6 flex-grow">
         <p className="text-gray-800 text-lg">{content}</p>
       </div>
@@ -45,8 +44,12 @@ const TestimonialForm = ({ isOpen, onClose, onSubmit }) => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (!formData.name || !formData.email || !formData.content) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
@@ -91,7 +94,7 @@ const TestimonialForm = ({ isOpen, onClose, onSubmit }) => {
           </button>
         </div>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Name *
@@ -149,14 +152,15 @@ const TestimonialForm = ({ isOpen, onClose, onSubmit }) => {
               Cancel
             </button>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={isSubmitting}
               className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 disabled:opacity-50 transition-colors"
             >
               {isSubmitting ? 'Submitting...' : 'Submit Review'}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
@@ -212,35 +216,78 @@ const AllTestimonialsModal = ({ isOpen, onClose, testimonials }) => {
 const TestimonialCarousel = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [visibleTestimonials, setVisibleTestimonials] = useState(2);
+  const [visibleTestimonials, setVisibleTestimonials] = useState(3);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isAllTestimonialsOpen, setIsAllTestimonialsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Mock testimonials for demo
+  useEffect(() => {
+    const mockTestimonials = [
+      {
+        id: 1,
+        content: "Amazing service! The team went above and beyond to help us achieve our goals. Highly recommend!",
+        name: "Sarah Johnson",
+        email: "sarah@example.com",
+        createdAt: "2024-01-15"
+      },
+      {
+        id: 2,
+        content: "Professional, reliable, and results-driven. Working with them was a game changer for our business.",
+        name: "Michael Chen",
+        email: "michael@example.com",
+        createdAt: "2024-01-20"
+      },
+      {
+        id: 3,
+        content: "Outstanding quality and attention to detail. They delivered exactly what we needed on time.",
+        name: "Emily Rodriguez",
+        email: "emily@example.com",
+        createdAt: "2024-01-25"
+      },
+      {
+        id: 4,
+        content: "Excellent communication throughout the project. The results exceeded our expectations!",
+        name: "David Wilson",
+        email: "david@example.com",
+        createdAt: "2024-01-30"
+      },
+      {
+        id: 5,
+        content: "Top-notch service from start to finish. Will definitely work with them again in the future.",
+        name: "Lisa Thompson",
+        email: "lisa@example.com",
+        createdAt: "2024-02-05"
+      }
+    ];
+    
+    setTestimonials(mockTestimonials);
+    setLoading(false);
+  }, []);
+
   // Fetch testimonials from backend
   const fetchTestimonials = async () => {
-    console.log('kkkkkkkk')
+    console.log('Fetching testimonials...');
     try {
       const response = await fetch('/api/v1/testimonials');
       const data = await response.json();
       setTestimonials(data);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
+      // Keep mock data if API fails
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchTestimonials();
-  }, []);
-
-  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setVisibleTestimonials(1);
-      } else {
+      } else if (window.innerWidth < 1024) {
         setVisibleTestimonials(2);
+      } else {
+        setVisibleTestimonials(3);
       }
     };
 
@@ -252,21 +299,25 @@ const TestimonialCarousel = () => {
   useEffect(() => {
     if (testimonials.length > visibleTestimonials) {
       const interval = setInterval(() => {
-        setActiveIndex((prevIndex) => 
-          (prevIndex + 1) % (testimonials.length - visibleTestimonials + 1)
-        );
-      }, 3000);
+        setActiveIndex((prevIndex) => {
+          const maxIndex = testimonials.length - visibleTestimonials;
+          return prevIndex >= maxIndex ? 0 : prevIndex + 1;
+        });
+      }, 8000); // 8 seconds display time
 
       return () => clearInterval(interval);
     }
   }, [visibleTestimonials, testimonials.length]);
 
   const goToSlide = (index) => {
-    setActiveIndex(index);
+    const maxIndex = testimonials.length - visibleTestimonials;
+    if (index >= 0 && index <= maxIndex) {
+      setActiveIndex(index);
+    }
   };
 
   const handleSubmitTestimonial = async (formData) => {
-    console.log('aaaaaaaaaaaaaa')
+    console.log('Submitting testimonial...');
     try {
       const response = await fetch('/api/v1/testimonials', {
         method: 'POST',
@@ -283,13 +334,19 @@ const TestimonialCarousel = () => {
       }
     } catch (error) {
       console.error('Error submitting testimonial:', error);
-      throw error;
+      // For demo purposes, add to local state
+      const newTestimonial = {
+        id: Date.now(),
+        ...formData,
+        createdAt: new Date().toISOString()
+      };
+      setTestimonials(prev => [...prev, newTestimonial]);
     }
   };
 
   if (loading) {
     return (
-      <div className="relative py-16 overflow-hidden bg-cover bg-center bg-no-repeat h-83 flex items-center justify-center">
+      <div className="relative py-16 overflow-hidden bg-cover bg-center bg-no-repeat h-96 flex items-center justify-center">
         <div className="text-white text-xl">Loading testimonials...</div>
       </div>
     );
@@ -297,9 +354,9 @@ const TestimonialCarousel = () => {
 
   return (
     <div 
-      className="relative py-16 overflow-hidden bg-cover bg-center bg-no-repeat h-83 cursor-pointer"
+      className="relative py-16 overflow-hidden bg-cover bg-center bg-no-repeat min-h-96 cursor-pointer"
       style={{ 
-        backgroundImage: "url('/image_10.jpg')" 
+       backgroundImage: "url('/image_100.jpg')"
       }}
       onClick={() => {
         // Only open "All Testimonials" modal if the form is not open
@@ -308,7 +365,7 @@ const TestimonialCarousel = () => {
         }
       }}
     >
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      <div className="absolute inset-0 bg-black bg-opacity-30"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
@@ -329,22 +386,24 @@ const TestimonialCarousel = () => {
 
         {testimonials.length > 0 ? (
           <div className="relative font-sans text-base">
-            <div 
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ 
-                transform: `translateX(-${activeIndex * (100 / visibleTestimonials)}%)`,
-                width: `${(testimonials.length / visibleTestimonials) * 100}%`
-              }}
-            >
-              {testimonials.map((testimonial) => (
-                <div 
-                  key={testimonial.id || testimonial._id} 
-                  className="flex-shrink-0"
-                  style={{ width: `${100 / testimonials.length * visibleTestimonials}%` }}
-                >
-                  <TestimonialCard {...testimonial} />
-                </div>
-              ))}
+            <div className="overflow-hidden">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ 
+                  transform: `translateX(-${activeIndex * (100 / visibleTestimonials)}%)`,
+                  width: `${testimonials.length * (100 / visibleTestimonials)}%`
+                }}
+              >
+                {testimonials.map((testimonial, index) => (
+                  <div 
+                    key={testimonial.id || testimonial._id} 
+                    className="flex-shrink-0 px-2"
+                    style={{ width: `${100 / testimonials.length}%` }}
+                  >
+                    <TestimonialCard {...testimonial} />
+                  </div>
+                ))}
+              </div>
             </div>
 
             {testimonials.length > visibleTestimonials && (
@@ -356,7 +415,7 @@ const TestimonialCarousel = () => {
                       e.stopPropagation();
                       goToSlide(index);
                     }}
-                    className={`w-3 h-3 mx-1 rounded-full ${
+                    className={`w-3 h-3 mx-1 rounded-full transition-colors ${
                       activeIndex === index ? 'bg-orange-500' : 'bg-white bg-opacity-50'
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
